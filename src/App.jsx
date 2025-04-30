@@ -10,7 +10,7 @@ import logoImg from './assets/logo.png';
 function App() {
   const modal = useRef();
   const selectedPlace = useRef();
-  const [availablePlaces, setAvailablePlaces] = useState([])
+  const [availablePlaces, setAvailablePlaces] = useState([]);
   const [pickedPlaces, setPickedPlaces] = useState([]);
 
   useEffect(()=> {
@@ -23,7 +23,8 @@ function App() {
 
       setAvailablePlaces(sortedPlaces)
     })
-  }, [])
+  }, []);
+ 
 
   function handleStartRemovePlace(id) {
     modal.current.open();
@@ -87,3 +88,36 @@ function App() {
 }
 
 export default App;
+
+
+/*
+
+useEffect(()=> {
+    navigator.geolocation.getCurrentPosition(position => {
+      const sortedPlaces = sortPlacesByDistance(
+        AVAILABLE_PLACES,
+        position.coords.latitude,
+        position.coords.longitude
+      );
+
+      setAvailablePlaces(sortedPlaces)
+    })
+  }, []);
+
+  [] - as a second argument to useEffect, so after this anonymous function (where i have rest of the code),
+  and that second argument is an array of dependencies of that effect function.
+  by setting empty array as an argument, i will not run into infinite loop problem, 
+  why is that?
+  Idea behind useEffect, is that the first, anonymous function which you pass as a first argument to useEffect will be executed,
+  by React after every Component execution.
+  So if the app starts and the app component function executes, this code inside useEffect, will not be executed right away.
+  Instead its only after the app component function execution finished, so after this JSX code here has been returned.
+  That this side effect function you passed to useEffect will be executed by React.
+  So React will execute that after after the component function is done executing.
+  Now if you then update the state in there like: setAvailablePlaces(sortedPlaces),  the component function executes again 
+  as you learned, and in theory this effect function would execute again, but thats where this dependencies array comes into play.
+  If you define this dependencies array.
+  It will execute the effect function again if the dependecy values changed.
+  Since we have empty [], useEffect only executes once, if i am to remove [], the useEffect would execute again after every
+  app component render cycle, and therefore we would still have an infinite loop.
+*/
