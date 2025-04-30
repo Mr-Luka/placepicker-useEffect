@@ -43,6 +43,11 @@ function App() {
       const place = AVAILABLE_PLACES.find((place) => place.id === id);
       return [place, ...prevPickedPlaces];
     });
+
+    const storedIds = JSON.parse(localStorage.getItem('selectedPlaces')) || [];
+    if(storedIds.indexOf(id) === -1){
+      localStorage.setItem('selectedPlaces', JSON.stringify([id, ...storedIds]));
+    }
   }
 
   function handleRemovePlace() {
@@ -120,4 +125,12 @@ useEffect(()=> {
   It will execute the effect function again if the dependecy values changed.
   Since we have empty [], useEffect only executes once, if i am to remove [], the useEffect would execute again after every
   app component render cycle, and therefore we would still have an infinite loop.
+
+
+  const storedIds = JSON.parse(localStorage.getItem('selectedPlaces')) || [];
+    if(storedIds.indexOf(id) === -1){
+      localStorage.setItem('selectedPlaces', JSON.stringify([id, ...storedIds]));
+    }
+
+This is a side effect that doesnt need the use of useEffect
 */
