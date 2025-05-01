@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 import Places from './components/Places.jsx';
 import { AVAILABLE_PLACES } from './data.js';
@@ -57,7 +57,7 @@ function App() {
     }
   }
 
-  function handleRemovePlace() {
+  const handleRemovePlace = useCallback( function handleRemovePlace() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
     );
@@ -65,7 +65,8 @@ function App() {
 
     const storedIds = JSON.parse(localStorage.getItem('selectedPlaces')) || [];
     localStorage.setItem('selectedPlaces', JSON.stringify(storedIds.filter((id)=> id !== selectedPlace.current)))
-  }
+  }, []);
+  
 
   return (
     <>
@@ -106,6 +107,23 @@ export default App;
 
 
 /*
+
+useCallback() 
+returns a value, specifically it returns that function which you wrapped, but now such that it's not recreated
+whenever this surrounding component function is executed again, so with useCallback(), react makes sure that this
+inner-function is not recreated, instead it stores it internally in memory and reuses that stored function whenever
+the component function executes again. So now this is not recreated.
+You should use useCallback when passing functions as dependencies to useEffect.
+like in: DeleteConfirmation.jsx.
+useCallback() also uses dependecy array, same like useEffect()
+there you should add any prop or state values that are used inside of this wrapped function. In this case here, 
+we have none, I am using a state updating function which does not have to be added, and I am using some browser
+features like localStorage or this JSON object which also dont have to be added because they dont trigger this 
+component to be rendered again or anything like that, its prop or state values that should be added here.
+So here, having an empty array is fine and just as with useEffect(), React will now only recreate this function here
+with useCallback() if your dependencies changed. But if you have an empty array of dependecies, there is nothing 
+that could change and therefore this function isnt recreated.
+
 
 useEffect(()=> {
     navigator.geolocation.getCurrentPosition(position => {
