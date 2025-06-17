@@ -57,6 +57,7 @@ function App() {
     }
   }
 
+  // function that will handle removing places
   const handleRemovePlace = useCallback( function handleRemovePlace() {
     setPickedPlaces((prevPickedPlaces) =>
       prevPickedPlaces.filter((place) => place.id !== selectedPlace.current)
